@@ -10,7 +10,7 @@ const https = require('https');
 class FaceMatcherAPI {
 
     constructor(url) {
-        this.url = url;
+        this.url = new URL(url);
     }
 
     enrol(face) {
@@ -23,9 +23,12 @@ class FaceMatcherAPI {
             const data = JSON.stringify(face);
             // https://u697b9z2k8.execute-api.us-east-1.amazonaws.com/latest/enrol
             const options = {
-                hostname: 'u697b9z2k8.execute-api.us-east-1.amazonaws.com',
-                port: 443,
-                path: '/latest/enrol',
+                // hostname: 'u697b9z2k8.execute-api.us-east-1.amazonaws.com',
+                // port: 443,
+                // path: '/latest/enrol',
+                hostname: this.url.hostname,
+                port: this.url.port,
+                path: this.url.pathname,
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -46,9 +49,12 @@ class FaceMatcherAPI {
             const data = JSON.stringify(face);
             // https://u697b9z2k8.execute-api.us-east-1.amazonaws.com/latest/enrol
             const options = {
-                hostname: 'u697b9z2k8.execute-api.us-east-1.amazonaws.com',
-                port: 443,
-                path: '/latest/search',
+                // hostname: 'u697b9z2k8.execute-api.us-east-1.amazonaws.com',
+                // port: 443,
+                // path: '/latest/search',
+                hostname: this.url.hostname,
+                port: this.url.port,
+                path: this.url.pathname,
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,10 +77,11 @@ class FaceMatcherAPI {
             });
             res.on('end', function () {
                 console.log(response);
-                let responseObject = JSON.parse(response);
-                resolve(responseObject);
+                resolve(response);
+                // let responseObject = JSON.parse(response);
+                // resolve(responseObject);
             });
-            resolve(JSON.stringify(res.statusCode));
+            // resolve(JSON.stringify(res.statusCode));
         });
 
         // handle the possible errors
