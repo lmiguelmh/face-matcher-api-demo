@@ -144,11 +144,20 @@
                 <div class="media">
                     <div class="media-content">
                         <div class="content">
-                            <canvas id="canvas"></canvas>
+                            <canvas id="canvas" style="display: block; top:0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;"></canvas>
                             <input id="sample2-image" type="hidden">
                         </div>
                     </div>
                 </div>
+
+                <!--
+                <div class="box">
+                    <figure class="image">
+                        <canvas id="canvas" style="display: block; top:0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;"></canvas>
+                    </figure>
+                    <input id="sample2-image" type="hidden">
+                </div>
+                -->
 
                 <div class="field">
                     <label class="label">Id (required only for enrol)</label>
@@ -211,10 +220,6 @@
         if (FileReader && files && files.length) {
             let fr = new FileReader();
             fr.onload = function () {
-                let encoded = fr.result.toString().replace(/^data:(.*,)?/, '');
-                if ((encoded.length % 4) > 0) {
-                    encoded += '='.repeat(4 - (encoded.length % 4));
-                }
                 hidden_input_el.value = convertDataUriToBase64(fr.result.toString());
             };
             fr.readAsDataURL(files[0]);
@@ -227,6 +232,8 @@
         if (!id || !face) {
             output_element.innerText = "IllegalArgument";
         }
+
+        output_element.innerText = "wait...";
         let api = new FaceMatcherAPI(url + (url.endsWith("/") ? "enrol" : "/enrol"));
         api.enrol({
             id: id,
@@ -247,6 +254,7 @@
             output_element.innerText = "IllegalArgument";
         }
 
+        output_element.innerText = "wait...";
         let api = new FaceMatcherAPI(url + (url.endsWith("/") ? "search" : "/search"));
         api.search({
             image: image
@@ -273,13 +281,14 @@
         }
     };
 
+
     // Access webcam
     async function init() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             handleSuccess(stream);
         } catch (e) {
-            errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+            errorMsgElement.innerHTML = `navigator.getUserMedia error: ${e.toString()}`;
         }
     }
 
@@ -295,7 +304,11 @@
     // Draw image
     let context = canvas.getContext('2d');
     snap.addEventListener("click", function () {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        // context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0);
+        console.log()
         document.querySelector("#sample2-image").value = convertDataUriToBase64(canvas.toDataURL('image/jpeg'));
     });
 </script>
