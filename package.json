@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "server": "cd static && httpserver",
-    "compile": "node_modules/.bin/babel --no-comments --minified src/js --out-dir static/js && browserify static/js/face-matcher-api.js -o static/js/face-matcher-api.min.js"
+    "compile": "node_modules/.bin/babel --no-comments --minified src/js --out-dir static/js && browserify static/js/face-matcher-api.js -o static/js/face-matcher-api.min.js",
+    "test": "start chrome --incognito http://localhost:8080/index.html"
   },
   "keywords": [],
   "author": "lmiguelmh",
